@@ -43,11 +43,10 @@ main:
 	leaq	8000(%r13), %r12
 	addq	$8008000, %r13
 	movq	%r12, %rdx
-	movsd	.LC0(%rip), %xmm0
 .L5:
 	leaq	-8000(%rdx), %rax
 .L6:
-	movsd	%xmm0, (%rax)
+	movq	$0x000000000, (%rax)
 	addq	$8, %rax
 	cmpq	%rdx, %rax
 	jne	.L6
@@ -99,11 +98,6 @@ main:
 	.size	SIZE, 4
 SIZE:
 	.long	1000
-	.section	.rodata.cst8,"aM",@progbits,8
-	.align 8
-.LC0:
-	.long	0
-	.long	1074003968
 	.ident	"GCC: (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0"
 	.section	.note.GNU-stack,"",@progbits
 	.section	.note.gnu.property,"a"
