@@ -1,11 +1,9 @@
-	.file	"num1.c"
+	.file	"num2.c"
 	.text
-	.section	.rodata.str1.8,"aMS",@progbits,1
-	.align 8
-.LC3:
-	.string	"Result of metric multiplication: "
 	.section	.rodata.str1.1,"aMS",@progbits,1
-.LC4:
+.LC1:
+	.string	"Result: "
+.LC2:
 	.string	"%f\t"
 	.text
 	.globl	main
@@ -31,7 +29,7 @@ main:
 	movq	%fs:40, %rax
 	movq	%rax, -40(%rbp)
 	xorl	%eax, %eax
-	movq	%rsp, %rax
+	leaq	-7999488(%rsp), %rax
 .L2:
 	cmpq	%rax, %rsp
 	je	.L3
@@ -41,96 +39,43 @@ main:
 .L3:
 	subq	$512, %rsp
 	orq	$0, 504(%rsp)
-	movq	%rsp, %rcx
-	movq	%rsp, %rax
+	movq	%rsp, %r13
+	leaq	8000(%r13), %r12
+	addq	$8008000, %r13
+	movq	%r12, %rdx
+	movsd	.LC0(%rip), %xmm0
 .L5:
-	cmpq	%rax, %rsp
-	je	.L6
-	subq	$4096, %rsp
-	orq	$0, 4088(%rsp)
-	jmp	.L5
+	leaq	-8000(%rdx), %rax
 .L6:
-	subq	$512, %rsp
-	orq	$0, 504(%rsp)
-	movq	%rsp, %r10
-	movq	%rsp, %rax
-.L8:
-	cmpq	%rax, %rsp
-	je	.L9
-	subq	$4096, %rsp
-	orq	$0, 4088(%rsp)
-	jmp	.L8
-.L9:
-	subq	$512, %rsp
-	orq	$0, 504(%rsp)
-	movq	%rsp, %r14
-	movl	$64, %edx
-	movsd	.LC1(%rip), %xmm1
-	movsd	.LC2(%rip), %xmm0
-.L11:
-	leaq	-64(%rdx), %rax
-.L12:
-	movsd	%xmm1, (%rcx,%rax)
-	movsd	%xmm0, (%r10,%rax)
+	movsd	%xmm0, (%rax)
 	addq	$8, %rax
 	cmpq	%rdx, %rax
-	jne	.L12
-	addq	$64, %rdx
-	cmpq	$576, %rdx
-	jne	.L11
-	movq	%rcx, %r8
-	leaq	512(%rcx), %r9
-	movq	%r14, %r12
-	leaq	576(%r10), %r11
-.L13:
-	leaq	512(%r10), %rcx
-	movq	%r12, %rsi
-.L15:
-	movq	%rsi, %rdi
-	leaq	-512(%rcx), %rax
-	movq	%r8, %rdx
-	pxor	%xmm1, %xmm1
-.L14:
-	movsd	(%rdx), %xmm0
-	mulsd	(%rax), %xmm0
-	addsd	%xmm0, %xmm1
-	addq	$8, %rdx
-	addq	$64, %rax
-	cmpq	%rcx, %rax
-	jne	.L14
-	movsd	%xmm1, (%rdi)
-	addq	$8, %rsi
-	addq	$8, %rcx
-	cmpq	%r11, %rcx
-	jne	.L15
-	addq	$64, %r8
-	addq	$64, %r12
-	cmpq	%r9, %r8
-	jne	.L13
-	leaq	.LC3(%rip), %rdi
+	jne	.L6
+	addq	$8000, %rdx
+	cmpq	%r13, %rdx
+	jne	.L5
+	leaq	.LC1(%rip), %rdi
 	call	puts@PLT
-	leaq	64(%r14), %r12
-	addq	$576, %r14
-	leaq	.LC4(%rip), %r13
-.L17:
-	leaq	-64(%r12), %rbx
-.L18:
+	leaq	.LC2(%rip), %r14
+.L8:
+	leaq	-8000(%r12), %rbx
+.L9:
 	movsd	(%rbx), %xmm0
-	movq	%r13, %rsi
+	movq	%r14, %rsi
 	movl	$1, %edi
 	movl	$1, %eax
 	call	__printf_chk@PLT
 	addq	$8, %rbx
-	cmpq	%rbx, %r12
-	jne	.L18
+	cmpq	%r12, %rbx
+	jne	.L9
 	movl	$10, %edi
 	call	putchar@PLT
-	addq	$64, %r12
-	cmpq	%r12, %r14
-	jne	.L17
+	addq	$8000, %r12
+	cmpq	%r13, %r12
+	jne	.L8
 	movq	-40(%rbp), %rax
 	subq	%fs:40, %rax
-	jne	.L27
+	jne	.L15
 	movl	$0, %eax
 	leaq	-32(%rbp), %rsp
 	popq	%rbx
@@ -141,7 +86,7 @@ main:
 	.cfi_remember_state
 	.cfi_def_cfa 7, 8
 	ret
-.L27:
+.L15:
 	.cfi_restore_state
 	call	__stack_chk_fail@PLT
 	.cfi_endproc
@@ -153,16 +98,12 @@ main:
 	.type	SIZE, @object
 	.size	SIZE, 4
 SIZE:
-	.long	8
+	.long	1000
 	.section	.rodata.cst8,"aM",@progbits,8
 	.align 8
-.LC1:
+.LC0:
 	.long	0
 	.long	1074003968
-	.align 8
-.LC2:
-	.long	0
-	.long	1074790400
 	.ident	"GCC: (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0"
 	.section	.note.GNU-stack,"",@progbits
 	.section	.note.gnu.property,"a"
