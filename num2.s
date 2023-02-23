@@ -5,8 +5,7 @@
 	.string	"Result: "
 .LC2:
 	.string	"%f\t"
-	.section	.text.startup,"ax",@progbits
-	.p2align 4
+	.text
 	.globl	main
 	.type	main, @function
 main:
@@ -29,84 +28,59 @@ main:
 	.cfi_offset 3, -48
 	movq	%fs:40, %rax
 	movq	%rax, -40(%rbp)
+	xorl	%eax, %eax
 	movq	%rsp, %rax
+.L2:
 	cmpq	%rax, %rsp
 	je	.L3
-.L12:
 	subq	$4096, %rsp
 	orq	$0, 4088(%rsp)
-	cmpq	%rax, %rsp
-	jne	.L12
+	jmp	.L2
 .L3:
 	subq	$512, %rsp
 	orq	$0, 504(%rsp)
-	movapd	.LC0(%rip), %xmm0
-	leaq	.LC1(%rip), %rdi
-	leaq	.LC2(%rip), %r13
-	leaq	7(%rsp), %r14
+	movq	%rsp, %r14
+	leaq	512(%r14), %rdx
 	movq	%r14, %rax
-	andq	$-8, %r14
-	shrq	$3, %rax
+	movsd	.LC0(%rip), %xmm0
+.L5:
+	movsd	%xmm0, (%rax)
+	movsd	%xmm0, 8(%rax)
+	movsd	%xmm0, 16(%rax)
+	movsd	%xmm0, 24(%rax)
+	movsd	%xmm0, 32(%rax)
+	movsd	%xmm0, 40(%rax)
+	movsd	%xmm0, 48(%rax)
+	movsd	%xmm0, 56(%rax)
+	addq	$64, %rax
+	cmpq	%rdx, %rax
+	jne	.L5
+	leaq	.LC1(%rip), %rdi
+	call	puts@PLT
 	leaq	64(%r14), %r12
 	addq	$576, %r14
-	movups	%xmm0, 0(,%rax,8)
-	movups	%xmm0, 16(,%rax,8)
-	movups	%xmm0, 32(,%rax,8)
-	movups	%xmm0, 48(,%rax,8)
-	movups	%xmm0, 64(,%rax,8)
-	movups	%xmm0, 80(,%rax,8)
-	movups	%xmm0, 96(,%rax,8)
-	movups	%xmm0, 112(,%rax,8)
-	movups	%xmm0, 128(,%rax,8)
-	movups	%xmm0, 144(,%rax,8)
-	movups	%xmm0, 160(,%rax,8)
-	movups	%xmm0, 176(,%rax,8)
-	movups	%xmm0, 192(,%rax,8)
-	movups	%xmm0, 208(,%rax,8)
-	movups	%xmm0, 224(,%rax,8)
-	movups	%xmm0, 240(,%rax,8)
-	movups	%xmm0, 256(,%rax,8)
-	movups	%xmm0, 272(,%rax,8)
-	movups	%xmm0, 288(,%rax,8)
-	movups	%xmm0, 304(,%rax,8)
-	movups	%xmm0, 320(,%rax,8)
-	movups	%xmm0, 336(,%rax,8)
-	movups	%xmm0, 352(,%rax,8)
-	movups	%xmm0, 368(,%rax,8)
-	movups	%xmm0, 384(,%rax,8)
-	movups	%xmm0, 400(,%rax,8)
-	movups	%xmm0, 416(,%rax,8)
-	movups	%xmm0, 432(,%rax,8)
-	movups	%xmm0, 448(,%rax,8)
-	movups	%xmm0, 464(,%rax,8)
-	movups	%xmm0, 480(,%rax,8)
-	movups	%xmm0, 496(,%rax,8)
-	call	puts@PLT
-	.p2align 4,,10
-	.p2align 3
-.L5:
-	leaq	-64(%r12), %rbx
-	.p2align 4,,10
-	.p2align 3
+	leaq	.LC2(%rip), %r13
 .L6:
+	leaq	-64(%r12), %rbx
+.L7:
 	movsd	(%rbx), %xmm0
 	movq	%r13, %rsi
 	movl	$1, %edi
-	addq	$8, %rbx
 	movl	$1, %eax
 	call	__printf_chk@PLT
-	cmpq	%r12, %rbx
-	jne	.L6
+	addq	$8, %rbx
+	cmpq	%rbx, %r12
+	jne	.L7
 	movl	$10, %edi
-	leaq	64(%rbx), %r12
 	call	putchar@PLT
+	addq	$64, %r12
 	cmpq	%r14, %r12
-	jne	.L5
+	jne	.L6
 	movq	-40(%rbp), %rax
 	subq	%fs:40, %rax
 	jne	.L13
+	movl	$0, %eax
 	leaq	-32(%rbp), %rsp
-	xorl	%eax, %eax
 	popq	%rbx
 	popq	%r12
 	popq	%r13
@@ -128,13 +102,11 @@ main:
 	.size	SIZE, 4
 SIZE:
 	.long	8
-	.section	.rodata.cst16,"aM",@progbits,16
-	.align 16
+	.section	.rodata.cst8,"aM",@progbits,8
+	.align 8
 .LC0:
 	.long	0
-	.long	1075052544
-	.long	0
-	.long	1075052544
+	.long	1074003968
 	.ident	"GCC: (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0"
 	.section	.note.GNU-stack,"",@progbits
 	.section	.note.gnu.property,"a"
