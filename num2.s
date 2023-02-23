@@ -106,7 +106,7 @@ SIZE:
 	.align 8
 .LC0:
 	.long	0
-	.long	1074003968
+	.long	1076101120
 	.ident	"GCC: (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0"
 	.section	.note.GNU-stack,"",@progbits
 	.section	.note.gnu.property,"a"
