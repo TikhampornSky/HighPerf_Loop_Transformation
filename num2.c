@@ -1,6 +1,6 @@
 #include<stdio.h>
 
-const int SIZE = 8;
+const int SIZE = 1000;
 
 int main() {
     double a[SIZE][SIZE];
@@ -10,7 +10,7 @@ int main() {
     for (i = 0; i < n; i++) {
         for (j = 0; j < n; j++) {
             a[i][j] = 0;
-            a[i][j] = a[i][j] + 10 ;
+            a[i][j] = a[i][j] + 2.5 ;
         }
     }
 

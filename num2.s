@@ -29,7 +29,7 @@ main:
 	movq	%fs:40, %rax
 	movq	%rax, -40(%rbp)
 	xorl	%eax, %eax
-	movq	%rsp, %rax
+	leaq	-7999488(%rsp), %rax
 .L2:
 	cmpq	%rax, %rsp
 	je	.L3
@@ -39,46 +39,43 @@ main:
 .L3:
 	subq	$512, %rsp
 	orq	$0, 504(%rsp)
-	movq	%rsp, %r14
-	leaq	512(%r14), %rdx
-	movq	%r14, %rax
+	movq	%rsp, %r13
+	leaq	8000(%r13), %r12
+	addq	$8008000, %r13
+	movq	%r12, %rdx
 	movsd	.LC0(%rip), %xmm0
 .L5:
+	leaq	-8000(%rdx), %rax
+.L6:
 	movsd	%xmm0, (%rax)
-	movsd	%xmm0, 8(%rax)
-	movsd	%xmm0, 16(%rax)
-	movsd	%xmm0, 24(%rax)
-	movsd	%xmm0, 32(%rax)
-	movsd	%xmm0, 40(%rax)
-	movsd	%xmm0, 48(%rax)
-	movsd	%xmm0, 56(%rax)
-	addq	$64, %rax
+	addq	$8, %rax
 	cmpq	%rdx, %rax
+	jne	.L6
+	addq	$8000, %rdx
+	cmpq	%r13, %rdx
 	jne	.L5
 	leaq	.LC1(%rip), %rdi
 	call	puts@PLT
-	leaq	64(%r14), %r12
-	addq	$576, %r14
-	leaq	.LC2(%rip), %r13
-.L6:
-	leaq	-64(%r12), %rbx
-.L7:
+	leaq	.LC2(%rip), %r14
+.L8:
+	leaq	-8000(%r12), %rbx
+.L9:
 	movsd	(%rbx), %xmm0
-	movq	%r13, %rsi
+	movq	%r14, %rsi
 	movl	$1, %edi
 	movl	$1, %eax
 	call	__printf_chk@PLT
 	addq	$8, %rbx
-	cmpq	%rbx, %r12
-	jne	.L7
+	cmpq	%r12, %rbx
+	jne	.L9
 	movl	$10, %edi
 	call	putchar@PLT
-	addq	$64, %r12
-	cmpq	%r14, %r12
-	jne	.L6
+	addq	$8000, %r12
+	cmpq	%r13, %r12
+	jne	.L8
 	movq	-40(%rbp), %rax
 	subq	%fs:40, %rax
-	jne	.L13
+	jne	.L15
 	movl	$0, %eax
 	leaq	-32(%rbp), %rsp
 	popq	%rbx
@@ -89,7 +86,7 @@ main:
 	.cfi_remember_state
 	.cfi_def_cfa 7, 8
 	ret
-.L13:
+.L15:
 	.cfi_restore_state
 	call	__stack_chk_fail@PLT
 	.cfi_endproc
@@ -101,12 +98,12 @@ main:
 	.type	SIZE, @object
 	.size	SIZE, 4
 SIZE:
-	.long	8
+	.long	1000
 	.section	.rodata.cst8,"aM",@progbits,8
 	.align 8
 .LC0:
 	.long	0
-	.long	1076101120
+	.long	1074003968
 	.ident	"GCC: (Ubuntu 11.3.0-1ubuntu1~22.04) 11.3.0"
 	.section	.note.GNU-stack,"",@progbits
 	.section	.note.gnu.property,"a"
